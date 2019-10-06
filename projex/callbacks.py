@@ -159,7 +159,7 @@ class CallbackSet(object):
 
             try:
                 callback(*args)
-            except StandardError:
+            except Exception:
                 logger.exception('Error occurred during callback.')
 
         self._callbacks[signal] = new_callbacks

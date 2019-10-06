@@ -16,7 +16,6 @@ logger = logging.getLogger(__name__)
 import projex.text
 from .text import nativestring as nstr
 
-
 try:
     from Crypto.Cipher import AES
     from Crypto.PublicKey import RSA
@@ -31,6 +30,7 @@ except ImportError:
     AES = None
     Random = None
     RSA = None
+
 
 # ----------------------------------------------------------------------
 #                              FUNCTIONS
@@ -77,7 +77,6 @@ def decrypt(text, key=None):
     if key is None:
         key = ENCRYPT_KEY
 
-    bits = len(key)
     text = base64.b64decode(text)
     iv = text[:16]
     cipher = AES.new(key, AES.MODE_CBC, iv)
@@ -205,7 +204,7 @@ def generateKey(password, bits=32):
     elif bits == 16:
         hasher = hashlib.md5
     else:
-        raise StandardError('Invalid hash type')
+        raise Exception('Invalid hash type')
 
     return hasher(password).digest()
 
@@ -221,7 +220,7 @@ def generateToken(bits=32):
     elif bits == 32:
         hasher = hashlib.md5
     else:
-        raise StandardError('Unknown bit level.')
+        raise Exception('Unknown bit level.')
     return hasher(nstr(random.getrandbits(256))).hexdigest()
 
 
@@ -248,9 +247,9 @@ def unpad(text):
     """
     return text[0:-ord(text[-1])]
 
+
 # applications that use encryption should define their own encryption key
 # and assign it to this value - this will need to be the same size as the
 # block size.  by default, just setting the encryption key as 'password'
 # THIS SHOULD BE RESET FOR YOUR APPLICATION
 ENCRYPT_KEY = generateKey('password')
-

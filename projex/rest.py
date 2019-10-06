@@ -7,9 +7,9 @@ import datetime
 import decimal
 import logging
 import re
-import projex.text
-
 from xml.etree import ElementTree
+
+import projex.text
 from .text import nativestring as nstr
 
 try:
@@ -32,6 +32,7 @@ _decoders = []
 
 RESPONSE_FORMATS = {}
 
+
 # ----------------------------------------------------------------------
 
 
@@ -39,7 +40,7 @@ class JSONObject(object):
     def __init__(self, **data):
         self._data = data
 
-    def __json__(self, *args):
+    def __json__(self):
         return self.json()
 
     def json(self):
@@ -89,7 +90,7 @@ def json2py(json_obj):
     return json_obj
 
 
-def jsonify(py_data, default=None, indent=4, sort_keys=True):
+def jsonify(py_data, indent=4, sort_keys=True):
     """
     Converts the inputted Python data to JSON format.
     

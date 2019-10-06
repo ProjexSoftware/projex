@@ -28,7 +28,7 @@ class LazyModule(object):
     def __dir__(self):
         mod = self.__load_module__()
         return dir(mod)
-    
+
     def __getattr__(self, key):
         """
         Retrieves the value from the module wrapped by this instance.
@@ -38,12 +38,12 @@ class LazyModule(object):
         :return     <variant>
         """
         mod = self.__load_module__()
-        
+
         if os.environ.get('DOX_MODE') == '1':
             return getattr(mod, key, object)
         else:
             return getattr(mod, key)
-    
+
     def __setattr__(self, key, value):
         """
         Sets the value within the module wrapped by this instance to the
@@ -54,7 +54,7 @@ class LazyModule(object):
         """
         mod = self.__load_module__()
         return setattr(mod, key, value)
-    
+
     def __init__(self, module_name):
         self.__dict__['__module_name__'] = module_name
 
@@ -63,28 +63,28 @@ class LazyModule(object):
             return self.__dict__['__module_inst__']
         except KeyError:
             mod_name = self.__dict__['__module_name__']
-            
+
             try:
                 self.__dict__['__module_inst__'] = sys.modules[mod_name]
                 return self.__dict__['__module_inst__']
-            
+
             except KeyError:
                 # do a protective import for documentation generation
                 if os.environ.get('DOX_MODE') == '1':
                     try:
                         __import__(mod_name)
                         mod = sys.modules.get(mod_name)
-                    except ImportError, err:
+                    except ImportError:
                         mod = None
-                
+
                 # otherwise, require import
                 else:
                     __import__(mod_name)
                     mod = sys.modules.get(mod_name)
-                
+
                 self.__dict__['__module_inst__'] = mod
                 return mod
 
+
 # define a more Pep8 friendly caller
 lazy_import = LazyModule
-

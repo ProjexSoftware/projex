@@ -24,4 +24,3 @@ if __name__ == '__main__':
     from projex.xbuild.builder import build_cmd
 
     build_cmd()
-

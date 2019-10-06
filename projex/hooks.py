@@ -22,9 +22,9 @@ exceptions and printed values as well.
             |>>> hooks.registerExcept(email_error)
 """
 
-import weakref
 import sys
 import traceback
+import weakref
 
 _displayhooks = None
 _excepthooks = None
@@ -58,7 +58,7 @@ class StreamHooks(object):
         # write to the original stream
         try:
             self.stream.write(text)
-        except StandardError:
+        except Exception:
             pass
 
 

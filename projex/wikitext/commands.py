@@ -288,14 +288,14 @@ Table of contents can be created by specifying the toc key, as such:
 """
 
 import logging
-import projex.text
-import projex.makotext
 import re
 import xml.sax.saxutils
 
-from projex.wikitext.urlhandler import UrlHandler
-from projex.wikitext import styles as WIKI_STYLES
+import projex.makotext
+import projex.text
 from projex.text import nativestring as nstr
+from projex.wikitext import styles as WIKI_STYLES
+from projex.wikitext.urlhandler import UrlHandler
 
 logger = logging.getLogger(__name__)
 
@@ -390,7 +390,6 @@ def render(plain,
     toc_data = []
     align_div = ''
     list_indent = None
-    ignore_list_stack = False
 
     # add the default tag
     html.append(__style['wiki_open'].format(tag=defaultTag))
@@ -399,9 +398,9 @@ def render(plain,
         ignore_list_stack = False
         sline = line.strip()
 
-        #----------------------------------------------------------------------
+        # ----------------------------------------------------------------------
         #                           INDENTATION CHECKS
-        #----------------------------------------------------------------------
+        # ----------------------------------------------------------------------
 
         # check to see if we are continuing a list entry
         if list_indent:
@@ -420,9 +419,9 @@ def render(plain,
         if i in skip:
             continue
 
-        #----------------------------------------------------------------------
+        # ----------------------------------------------------------------------
         #                           ALIGNMENT
-        #----------------------------------------------------------------------
+        # ----------------------------------------------------------------------
 
         # check for a center option
         center = EXPR_CENTER.match(sline)
@@ -489,9 +488,9 @@ def render(plain,
             html.append(__style['align_close'])
             align_div = ''
 
-        #----------------------------------------------------------------------
+        # ----------------------------------------------------------------------
         #                           INDENTATION CHECKS
-        #----------------------------------------------------------------------
+        # ----------------------------------------------------------------------
 
         # make sure we're on the same level
         if curr_section and sline and (len(line) - len(line.lstrip())) < curr_section_level:
@@ -507,9 +506,9 @@ def render(plain,
             skip.append(count)
             count += 1
 
-        #----------------------------------------------------------------------
+        # ----------------------------------------------------------------------
         #                           IGNORE WIKI INFORMATION
-        #----------------------------------------------------------------------
+        # ----------------------------------------------------------------------
 
         # check to see what is wiki protected
         if sline.startswith('<nowiki'):
@@ -546,9 +545,9 @@ def render(plain,
                 html.append(xml.sax.saxutils.escape(line))
             continue
 
-        #----------------------------------------------------------------------
+        # ----------------------------------------------------------------------
         #                           TABLES
-        #----------------------------------------------------------------------
+        # ----------------------------------------------------------------------
 
         parts = line.split(' | ')
         if len(parts) == 1:
@@ -568,9 +567,9 @@ def render(plain,
             line = line.replace('<nowiki>%s</nowiki>' % section, newtext)
             count += 1
 
-        #----------------------------------------------------------------------
+        # ----------------------------------------------------------------------
         #                           SECTIONS
-        #----------------------------------------------------------------------
+        # ----------------------------------------------------------------------
 
         # check for a div section
         section = EXPR_SECTION.match(sline)
@@ -596,7 +595,6 @@ def render(plain,
                     mapped = SECTION_MAP.get(name, display)
 
                     section_stack.append(__style['section_alert_close'])
-                    url, success = urlHandler.resolve('img:%s.png' % name)
                     html.append(__style['section_alert_open'].format(name=name,
                                                                      title=mapped))
 
@@ -608,9 +606,9 @@ def render(plain,
             line = line.replace(section.group(), ' ' * len(section.group()))
             curr_section_level = len(line) - len(line.lstrip())
 
-        #----------------------------------------------------------------------
+        # ----------------------------------------------------------------------
         #                           CODE
-        #----------------------------------------------------------------------
+        # ----------------------------------------------------------------------
 
         # check for code
         code = EXPR_CODE.match(sline)
@@ -646,7 +644,7 @@ def render(plain,
             html += code_stack
             code_stack = []
 
-        #----------------------------------------------------------------------
+        # ----------------------------------------------------------------------
 
         # make sure we have no html data in the line
         if not sline:
@@ -660,9 +658,9 @@ def render(plain,
             html.append(__style['hr'].format(style=style))
             continue
 
-        #----------------------------------------------------------------------
+        # ----------------------------------------------------------------------
         #                           HEADERS
-        #----------------------------------------------------------------------
+        # ----------------------------------------------------------------------
 
         # check for headers
         header = EXPR_HEADER.match(sline)
@@ -695,9 +693,9 @@ def render(plain,
         for key, repl in POST_ESCAPE_REPLACE.items():
             line = line.replace(key, repl)
 
-        #----------------------------------------------------------------------
+        # ----------------------------------------------------------------------
         #                           CLASS TYPES
-        #----------------------------------------------------------------------
+        # ----------------------------------------------------------------------
 
         # resolve any class links
         for result in EXPR_CLASS_LINK.findall(line):
@@ -715,9 +713,9 @@ def render(plain,
             info = __style['span_class'].format(crumbs=' '.join(opts))
             line = line.replace('&lt;' + result + '&gt;', info)
 
-        #----------------------------------------------------------------------
+        # ----------------------------------------------------------------------
         #                           GENERAL FORMATTING
-        #----------------------------------------------------------------------
+        # ----------------------------------------------------------------------
 
         # replace formatting options
         for section in EXPR_UNDERLINE.findall(line)[::2]:
@@ -740,9 +738,9 @@ def render(plain,
             text = __style['italic'].format(text=section)
             line = line.replace("''%s''" % section, text)
 
-        #----------------------------------------------------------------------
+        # ----------------------------------------------------------------------
         #                           IMAGES
-        #----------------------------------------------------------------------
+        # ----------------------------------------------------------------------
 
         # resolve any images
         for grp, url in EXPR_IMG.findall(line):
@@ -757,9 +755,9 @@ def render(plain,
                                                            style=urlsplit[1],
                                                            title=last_word))
 
-        #----------------------------------------------------------------------
+        # ----------------------------------------------------------------------
         #                           COLORS
-        #----------------------------------------------------------------------
+        # ----------------------------------------------------------------------
 
         # resolve any colors
         for grp, coloring in EXPR_COLOR.findall(line):
@@ -770,9 +768,9 @@ def render(plain,
             line = line.replace(grp, __style['color'].format(color=splt[0],
                                                              text=splt[1]))
 
-        #----------------------------------------------------------------------
+        # ----------------------------------------------------------------------
         #                           SPANS
-        #----------------------------------------------------------------------
+        # ----------------------------------------------------------------------
 
         # resolve any spans
         for grp, coloring in EXPR_SPAN.findall(line):
@@ -780,13 +778,12 @@ def render(plain,
             if len(splt) == 1:
                 splt.append('')
 
-            templ = '<span style="%s">%s</span>' % (splt[0], splt[1])
             line = line.replace(grp, __style['span'].format(style=splt[0],
                                                             text=splt[1]))
 
-        #----------------------------------------------------------------------
+        # ----------------------------------------------------------------------
         #                           LINKS
-        #----------------------------------------------------------------------
+        # ----------------------------------------------------------------------
 
         # resolve any external urls
         for result in EXPR_EXTLINK.findall(line):
@@ -839,9 +836,9 @@ def render(plain,
 
             line = line.replace(grp, templ)
 
-        #----------------------------------------------------------------------
+        # ----------------------------------------------------------------------
         #                           LISTS
-        #----------------------------------------------------------------------
+        # ----------------------------------------------------------------------
 
         # process lists
         results = EXPR_LIST.match(line)
@@ -870,18 +867,15 @@ def render(plain,
             html += list_stack
             list_stack = []
 
-        #----------------------------------------------------------------------
+        # ----------------------------------------------------------------------
         #                           TABLES
-        #----------------------------------------------------------------------
+        # ----------------------------------------------------------------------
 
         parts = line.split(' | ')
         if len(parts) > 1:
             if not table_stack:
                 table_stack.append(__style['table_close'])
                 html.append(__style['table_open'])
-
-            cell_type = 'td'
-            styles = ''
 
             cells = []
             for part in parts:
@@ -901,7 +895,6 @@ def render(plain,
                         styles = styles.strip('[]')
 
                     part = part.replace(grp, '').strip()
-                    opts = (cell_type, styles, part, cell_type)
 
                     cells.append(__style['table_cell'].format(tag=cell_type,
                                                               style=styles,

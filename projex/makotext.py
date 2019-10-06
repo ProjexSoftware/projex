@@ -2,6 +2,7 @@
 
 import logging
 import os
+
 import projex
 
 logger = logging.getLogger(__name__)
@@ -91,7 +92,7 @@ def renderfile(filename,
 
     try:
         output = templ.render(**scope)
-    except StandardError:
+    except Exception:
         output = default
         if not silent:
             logger.exception('Error rendering mako text')
@@ -159,7 +160,7 @@ def render(text,
         lookup = mako.lookup.TemplateLookup(directories=templatePaths)
         try:
             templ = mako.template.Template(text, lookup=lookup)
-        except StandardError:
+        except Exception:
             output = text if default is None else default
             if not silent:
                 logger.exception('Error compiling mako text')
@@ -167,7 +168,7 @@ def render(text,
     else:
         try:
             templ = mako.template.Template(text)
-        except StandardError:
+        except Exception:
             output = text if default is None else default
             if not silent:
                 logger.exception('Error compiling mako text')
@@ -175,7 +176,7 @@ def render(text,
 
     try:
         output = templ.render(**scope)
-    except StandardError:
+    except Exception:
         if raiseErrors:
             raise
         output = text if default is None else default

@@ -3,8 +3,9 @@ Defines the build setup errors.
 """
 
 
-class XBuildError(StandardError):
+class XBuildError(Exception):
     pass
+
 
 # I
 # ---------------------------------------------------------------------

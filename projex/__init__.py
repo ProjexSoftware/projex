@@ -29,8 +29,9 @@ __version__ = '{0}.{1}.{2}'.format(*__version_info__)
 
 # ------------------------------------------------------------------------------
 
-from projex.init import *
 import logging
+
+from projex.init import *
 
 # define a new level for logging
 if not hasattr(logging, 'SUCCESS'):

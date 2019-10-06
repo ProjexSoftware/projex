@@ -1,6 +1,7 @@
 """ Defines commonly used sorting methods for lists. """
 
 import re
+
 from .text import nativestring as nstr
 
 EXPR_NATURAL = re.compile('([^\d]*)(\d*)')

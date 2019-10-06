@@ -13,14 +13,15 @@
 import inspect
 import logging
 import sys
+from optparse import OptionParser
 
 from .text import nativestring as nstr
-from optparse import OptionParser
 
 logger = logging.getLogger(__name__)
 
 PROGRAM_NAME = '%prog'
 PARSER_CLASS = OptionParser
+
 
 # ------------------------------------------------------------------------------
 
@@ -31,7 +32,6 @@ class climethod(object):
     a cli package.  This wrapper will allow the developer to map methods \
     in a module to the optparse module.
     
-    :param      usage | <str>
     """
 
     def __init__(self, func=None):
@@ -53,7 +53,7 @@ class climethod(object):
         self.func = func
 
         # process the optional arguments and keywords
-        args, varargs, keywords, defaults = inspect.getargspec(func)
+        args, varargs, keywords, defaults = inspect.signature(func)
 
         if not defaults:
             defaults = []
@@ -161,7 +161,7 @@ class cliignore(object):
         return self.func(*args, **kwds)
 
 
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 
 class Interface(object):
     def __init__(self, name, scope=None):
@@ -229,7 +229,7 @@ class Interface(object):
         self._name = name
 
 
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 
 def command(argv, scope):
     """

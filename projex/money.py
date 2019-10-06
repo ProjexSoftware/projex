@@ -4,6 +4,7 @@
 
 import locale
 import re
+
 import urllib2
 
 from .text import nativestring as nstr
@@ -98,7 +99,7 @@ def lookup():
     url = 'http://download.geonames.org/export/dump/countryInfo.txt'
     try:
         data = urllib2.urlopen(url)
-    except StandardError:
+    except Exception:
         return {}
 
     ccodes = {}

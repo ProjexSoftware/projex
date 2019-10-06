@@ -245,6 +245,7 @@ class BoolIO(XmlDataIO):
 
 XmlDataIO.registerAddon('bool', BoolIO())
 
+
 # D
 # ----------------------------------------------------------------------
 
@@ -294,6 +295,7 @@ class DictIO(XmlDataIO):
 
 XmlDataIO.registerAddon('dict', DictIO())
 
+
 # F
 # ----------------------------------------------------------------------
 
@@ -330,6 +332,7 @@ class FloatIO(XmlDataIO):
 
 XmlDataIO.registerAddon('float', FloatIO())
 
+
 # I
 # ----------------------------------------------------------------------
 
@@ -365,6 +368,7 @@ class IntegerIO(XmlDataIO):
 
 
 XmlDataIO.registerAddon('int', IntegerIO())
+
 
 # L
 # ----------------------------------------------------------------------
@@ -406,6 +410,7 @@ class ListIO(XmlDataIO):
 
 
 XmlDataIO.registerAddon('list', ListIO())
+
 
 # O
 # ----------------------------------------------------------------------
@@ -484,6 +489,7 @@ class OrderedDictIO(XmlDataIO):
 
 XmlDataIO.registerAddon('OrderedDict', OrderedDictIO())
 
+
 # S
 # ----------------------------------------------------------------------
 
@@ -558,8 +564,9 @@ class StringIO(XmlDataIO):
 
 XmlDataIO.registerAddon('str', StringIO())
 
+
 # T
-#----------------------------------------------------------------------
+# ----------------------------------------------------------------------
 
 
 class TupleIO(XmlDataIO):

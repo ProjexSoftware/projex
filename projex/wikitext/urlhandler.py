@@ -4,6 +4,7 @@ URLs.
 """
 
 import logging
+
 from projex.text import nativestring as nstr
 
 logger = logging.getLogger(__name__)

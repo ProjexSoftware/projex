@@ -2,8 +2,8 @@
 
 import re
 
-from .sorting import natural as vercmp
 from . import errors
+from .sorting import natural as vercmp
 
 
 def validate(version, comparison):
@@ -23,28 +23,28 @@ def validate(version, comparison):
     # match any
     if not comparison:
         return True
-    
+
     # loop through all available
     opts = comparison.split(',')
     expr = re.compile('(==|!=|<=|>=|<|>)(.*)')
     for opt in opts:
         try:
             test, value = expr.match(opt.strip()).groups()
-        except StandardError:
+        except Exception:
             raise errors.InvalidVersionDefinition(opt)
-        
+
         value = value.strip()
-        
+
         # test for an exact match
         if test == '==':
             if value == version:
                 return True
-        
+
         # test for negative exact matches
         elif test == '!=':
             if value == version:
                 return False
-        
+
         # test for range conditions
         elif test == '<':
             if vercmp(version, value) != -1:
@@ -58,5 +58,5 @@ def validate(version, comparison):
         elif test == '>=':
             if vercmp(value, version) not in (-1, 0):
                 return False
-    
+
     return True

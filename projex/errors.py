@@ -46,7 +46,7 @@ class ProjexErrorHandler(logging.Handler):
             raise err
 
 
-class ProjexError(StandardError):
+class ProjexError(Exception):
     """ Base Error class for all projex errors. """
     pass
 
@@ -74,7 +74,7 @@ class AddonAlreadyExists(ProjexError):
 
 
 # D
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 
 class DependencyNotFoundError(ProjexError):
     """ Thrown when a dependent module is attempted to be imported. """
@@ -95,7 +95,7 @@ class DocumentationError(ProjexError):
 
 
 # F
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 
 class FilepathNotFoundError(ProjexError):
     """ Thrown when a filepath lookup is not found. """
@@ -114,7 +114,7 @@ class FileReadError(ProjexError):
 
 
 # I
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 
 class ImproperXmlFormatError(ProjexError):
     """ Thrown when the XML file cannot be parsed. """
@@ -129,7 +129,7 @@ class InvalidVersionDefinition(ProjexError):
 
 
 # N
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 
 class NotifyError(ProjexError):
     """ Thrown when the notification system fails. """
@@ -139,7 +139,7 @@ class NotifyError(ProjexError):
 
 
 # P
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 
 class PluginImportError(ProjexError):
     """ Thrown when a python plugin for one of the systems fails to load. """

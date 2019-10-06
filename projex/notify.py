@@ -2,14 +2,13 @@
 
 import base64
 import datetime
+import logging
 import os
 import re
-import socket
 import smtplib
-import logging
+import socket
 
 import projex.text
-
 from .text import nativestring as nstr
 
 # support windows server
@@ -76,7 +75,7 @@ def connectMSExchange(server):
     err, sec_buffer = sspi_client.authorize(sec_buffer)
     # noinspection PyShadowingBuiltins
     buffer = sec_buffer[0].Buffer
-    ntlm_message = base64.encodestring(buffer).replace('\n', '')
+    ntlm_message = base64.encodebytes(buffer).replace('\n', '')
 
     # send NTLM Type 1 message -- Authentication Request
     code, response = server.docmd('AUTH', 'NTLM ' + ntlm_message)
@@ -87,10 +86,10 @@ def connectMSExchange(server):
         return False, msg
 
     # generate NTLM Type 3 message
-    err, sec_buffer = sspi_client.authorize(base64.decodestring(response))
+    err, sec_buffer = sspi_client.authorize(base64.decodebytes(response))
     # noinspection PyShadowingBuiltins
     buffer = sec_buffer[0].Buffer
-    ntlm_message = base64.encodestring(buffer).replace('\n', '')
+    ntlm_message = base64.encodebytes(buffer).replace('\n', '')
 
     # send the NTLM Type 3 message -- Response Message
     code, response = server.docmd('', ntlm_message)
@@ -231,12 +230,12 @@ def sendEmail(sender,
     # create the connection to the email server
     try:
         smtp_server = smtplib.SMTP(nstr(server))
-    except socket.gaierror, err:
+    except socket.gaierror as err:
         logger.error(err)
         if raiseErrors:
             raise
         return False
-    except Exception, err:
+    except Exception as err:
         logger.error(err)
         if raiseErrors:
             raise
@@ -251,7 +250,7 @@ def sendEmail(sender,
     try:
         smtp_server.sendmail(sender, recipients, msg.as_string())
         smtp_server.close()
-    except Exception, err:
+    except Exception as err:
         logger.error(err)
         if raiseErrors:
             raise

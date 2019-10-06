@@ -123,7 +123,7 @@ class AddonMixin(object):
         try:
             if issubclass(addon, cls):
                 setattr(addon, '_{0}__addonName'.format(addon.__name__), name)
-        except StandardError:
+        except Exception:
             pass
 
         setattr(cls, prop, cmds)
@@ -164,6 +164,7 @@ class AddonMixin(object):
             mods.remove(module)
         except KeyError:
             pass
+
 
 # backward compatibility support
 AddonManager = AddonMixin

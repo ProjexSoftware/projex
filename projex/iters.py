@@ -50,4 +50,3 @@ def group(iterable):
     for _, grouper in itertools.groupby(numbers, key=lambda i, c=itertools.count(): i - next(c)):
         subset = list(grouper)
         yield subset[0], subset[-1]
-

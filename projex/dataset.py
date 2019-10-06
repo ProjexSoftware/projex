@@ -1,7 +1,8 @@
 """ Defines a commonly used data paradigm for all projex systems. """
 
-from .text import nativestring as nstr
 from xml.etree import ElementTree
+
+from .text import nativestring as nstr
 
 
 class DataSet(dict):
@@ -121,6 +122,7 @@ class DataSet(dict):
                     decoder | <method>
         """
         DataSet._xmlTypes[nstr(typ)] = (encoder, decoder)
+
 
 # ------------------------------------------------------------------------------
 

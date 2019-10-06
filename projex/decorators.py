@@ -6,18 +6,20 @@ except ImportError:
     def wraps(func):
         return func
 
+import inspect
+import logging
+import os
+import time
+
 import hotshot
 import hotshot.stats
-import inspect
-import os
-import logging
-import time
 
 import projex
 from projex import errors
 
 # create the logger
 logger = logging.getLogger(__name__)
+
 
 # A
 # ------------------------------------------------------------------------------
@@ -184,6 +186,7 @@ def profiler(sorting=('tottime',), stripDirs=True,
 
     def decorated(func):
         """ Wrapper function to handle the profiling options. """
+
         # create a call to the wrapping
         @wraps(func)
         def wrapped(*args, **kwds):
@@ -240,7 +243,7 @@ def retrymethod(count, sleep=0):
             for i in range(count - 1):
                 try:
                     return func(*args, **kwds)
-                except StandardError:
+                except Exception:
                     pass
 
                 if sleep:

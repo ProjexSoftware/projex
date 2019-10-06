@@ -6,44 +6,44 @@ from projex.enum import enum
 
 # define global enumerations
 RepeatFlags = enum(  # Weekly Flags
-                     'EveryMonday',
-                     'EveryTuesday',
-                     'EveryWednesday',
-                     'EveryThursday',
-                     'EveryFriday',
-                     'EverySaturday',
-                     'EverySunday',
+    'EveryMonday',
+    'EveryTuesday',
+    'EveryWednesday',
+    'EveryThursday',
+    'EveryFriday',
+    'EverySaturday',
+    'EverySunday',
 
-                     # Repeating Flags
-                     'DayOfTheMonth',
-                     'DayOfTheWeek')
+    # Repeating Flags
+    'DayOfTheMonth',
+    'DayOfTheWeek')
 
 RepeatMode = enum(Weekly=2,  # removed the 'Daily' key, was 1
                   Monthly=4,
                   Yearly=8)
 
 Names = enum(  # default
-               'Sometime',
+    'Sometime',
 
-               # Preset Names
-               'Today',
-               'ThisWeek',
-               'ThisMonth',
-               'ThisYear',
+    # Preset Names
+    'Today',
+    'ThisWeek',
+    'ThisMonth',
+    'ThisYear',
 
-               # Past Names
-               'Yesterday',
-               'LastWeek',
-               'LastMonth',
-               'LastYear',
-               'Past',
+    # Past Names
+    'Yesterday',
+    'LastWeek',
+    'LastMonth',
+    'LastYear',
+    'Past',
 
-               # Future Names
-               'Tomorrow',
-               'NextWeek',
-               'NextMonth',
-               'NextYear',
-               'Future')
+    # Future Names
+    'Tomorrow',
+    'NextWeek',
+    'NextMonth',
+    'NextYear',
+    'Future')
 
 DaysOfWeek = {
     1: RepeatFlags.EveryMonday,

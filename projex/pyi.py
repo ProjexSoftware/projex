@@ -3,8 +3,9 @@ Defines helper methods for the PyInstaller utility
 """
 
 import os
-import projex
 import sys
+
+import projex
 
 
 def collect(basepath, exclude=None, processPlugins=True):
@@ -111,5 +112,3 @@ def collect(basepath, exclude=None, processPlugins=True):
         f.close()
 
     return imports, datas
-
-

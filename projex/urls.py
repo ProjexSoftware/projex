@@ -1,10 +1,12 @@
 """ Defines common and useful methods for manipulating URLS. """
 
-import projex.text
 import urllib
+
 import urlparse
 
+import projex.text
 from .text import nativestring as nstr
+
 
 # B
 # ----------------------------------------------------------------------
@@ -64,7 +66,7 @@ def build(path, query=None, fragment=''):
 
 
 # P
-#----------------------------------------------------------------------
+# ----------------------------------------------------------------------
 
 def parse(url):
     """
@@ -96,7 +98,7 @@ def parse(url):
 
 
 # R
-#----------------------------------------------------------------------
+# ----------------------------------------------------------------------
 
 def register(scheme):
     """

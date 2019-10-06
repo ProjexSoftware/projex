@@ -2,6 +2,7 @@
 Function editing utilities
 """
 
+
 def extract_keywords(func):
     """
     Parses the keywords from the given function.

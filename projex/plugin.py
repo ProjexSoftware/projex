@@ -1,16 +1,15 @@
 """ Defines the Plugin class, a generic way to define Python plugins. """
 
 import glob
-import os.path
 import logging
+import os.path
 import sys
-
-from .text import nativestring as nstr
 from xml.etree import ElementTree
 
 import projex
 import projex.text
 from projex.enum import enum
+from .text import nativestring as nstr
 
 __all__ = ['Plugin']
 
@@ -315,7 +314,7 @@ class Plugin(object):
             curr_path = []
             setattr(cls, prop_key, curr_path)
 
-        if isinstance(pluginpath, basestring):
+        if isinstance(pluginpath, str):
             pluginpath = pluginpath.split(os.path.pathsep)
 
         for path in pluginpath:
@@ -378,7 +377,7 @@ class Plugin(object):
                         proxy = PluginProxy.fromFile(cls, file_)
                         cls.register(proxy)
 
-                    except Exception, e:
+                    except Exception as e:
                         name = projex.text.pretty(name)
                         err = Plugin(name)
                         err.setError(e)
@@ -407,7 +406,7 @@ class Plugin(object):
                     try:
                         __import__(package)
 
-                    except Exception, e:
+                    except Exception as e:
                         name = projex.text.pretty(name)
                         err = Plugin(name)
                         err.setError(e)
@@ -436,7 +435,7 @@ class Plugin(object):
                     try:
                         __import__(package)
 
-                    except Exception, e:
+                    except Exception as e:
                         name = projex.text.pretty(name)
                         err = Plugin(name)
                         err.setError(e)
@@ -612,7 +611,7 @@ class PluginProxy(Plugin):
         try:
             __import__(package)
 
-        except Exception, e:
+        except Exception as e:
             err = Plugin(self.name(), self.version())
             err.setError(e)
             err.setFilepath(module_path)
@@ -700,8 +699,6 @@ class PluginProxy(Plugin):
             if name == '__init__':
                 name = os.path.normpath(filepath).split(os.path.sep)[-2]
             name = projex.text.pretty(name)
-
-        icon = xroot.get('icon', './icon.png')
 
         ximport = xroot.find('import')
         if ximport is not None:

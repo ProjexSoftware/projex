@@ -4,21 +4,21 @@ Defines the builder class for building versions.
 
 import logging
 import os
-import projex
-import projex.resources
-import projex.pyi
 import re
 import shutil
 import subprocess
 import sys
 import time
 import zipfile
-
 from xml.etree import ElementTree
+
+import projex
+import projex.pyi
+import projex.resources
 from projex.enum import enum
-from projex.xbuild import templ
-from projex.xbuild import errors
 from projex.text import nativestring as nstr
+from projex.xbuild import errors
+from projex.xbuild import templ
 
 try:
     import yaml
@@ -410,7 +410,6 @@ class Builder(object):
     # noinspection PyMethodMayBeStatic
     def generatePlugins(self, basepath):
         for root, folders, files in os.walk(basepath):
-            plugs = []
 
             if '__plugins__.py' not in files:
                 continue
@@ -446,7 +445,7 @@ class Builder(object):
         """
         pass
 
-    def generateExecutable(self, outpath='.', signed=False):
+    def generateExecutable(self, signed=False):
         """
         Generates the executable for this builder in the output path.
         
@@ -545,7 +544,6 @@ class Builder(object):
 
         # determine the revision location
         revfile = os.path.join(revpath, self.revisionFilename())
-        mode = ''
         # test for svn revision
         try:
             args = ['svn', 'info', revpath]
@@ -606,7 +604,6 @@ class Builder(object):
             'signcmd': ''
         }
 
-        basetempl = ''
         if self.runtime() and os.path.exists(self.distributionPath()):
             opts['compilepath'] = os.path.join(self.distributionPath(), self.executableName())
             basetempl = templ.NSISAPP
@@ -697,7 +694,6 @@ class Builder(object):
 
         # run the installer
         cmd = os.path.expandvars(self.installerOption('cmd'))
-        success = cmdexec(cmd.format(script=outfile))
 
         # sign the installer
         if signed:
@@ -725,10 +721,6 @@ class Builder(object):
             'description': self.description(),
             'url': self.companyUrl()
         }
-
-        wrap_dict = lambda x: map(lambda k: "r'{0}': [{1}]".format(k[0],
-                                                                   ',\n'.join(wrap_str(k[1]))),
-                                  x.items())
 
         opts['dependencies'] = ',\n'.join(wrap_str(self.dependencies()))
         opts['classifiers'] = ',\n'.join(wrap_str(self.classifiers()))
@@ -1719,13 +1711,12 @@ class Builder(object):
         
         :return     <Builder> || None
         """
-        xdata = None
         ydata = None
 
         # try parsing an XML file
         try:
             xdata = ElementTree.parse(filename).getroot()
-        except StandardError:
+        except Exception:
             xdata = None
 
         if xdata is None:
@@ -1736,7 +1727,7 @@ class Builder(object):
 
                 try:
                     ydata = yaml.load(text)
-                except StandardError:
+                except Exception:
                     return None
             else:
                 log.warning('Could not process yaml builder!')
@@ -1825,7 +1816,6 @@ class PackageBuilder(Builder):
         
         :return     <Builder> || None
         """
-        module = None
         pkg_data = xdata.find('package')
         if pkg_data is not None:
             path = pkg_data.find('path').text
@@ -1861,7 +1851,6 @@ class PackageBuilder(Builder):
         
         :return     <Builder> || None
         """
-        module = None
         pkg_data = ydata.get('package')
         if pkg_data is not None:
             path = pkg_data.get('path', '')
@@ -1914,7 +1903,7 @@ Builder.register(SignedApplicationBuilder)
 
 def build_cmd():
     if len(sys.argv) < 2:
-        print 'usage: projex/xbuild/builder [buildfile] (--no-remote)'
+        print('usage: projex/xbuild/builder [buildfile] (--no-remote)')
         sys.exit(0)
 
     xml = None
@@ -1923,11 +1912,11 @@ def build_cmd():
     # load environment settings
     try:
         xml = ElementTree.parse(sys.argv[1]).getroot()
-    except StandardError:
+    except Exception:
         with open(sys.argv[1], 'r') as f:
             try:
                 ydata = yaml.load(f.read())
-            except StandardError:
+            except Exception:
                 ydata = None
 
     env = {}
@@ -1950,8 +1939,8 @@ def build_cmd():
 
     # run this build in another environment
     if '--no-remote' not in sys.argv and \
-       'PYTHON' in env and \
-       env['PYTHON'] != sys.executable:
+            'PYTHON' in env and \
+            env['PYTHON'] != sys.executable:
         cmd = '{0} {1} {2} --no-remote'.format(env['PYTHON'], __file__, sys.argv[1])
         log.info('starting remote python process...')
         log.info(cmd)
@@ -1970,5 +1959,3 @@ if __name__ == '__main__':
     logging.basicConfig()
     log.setLevel(logging.INFO)
     build_cmd()
-
-

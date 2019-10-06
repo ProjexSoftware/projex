@@ -7,13 +7,14 @@ import datetime
 import logging
 import re
 import sys
+from encodings.aliases import aliases
 
 from HTMLParser import HTMLParser
-from encodings.aliases import aliases
 
 # utilize the inflect engine if possible for plurarlize and singularize
 try:
     import inflect
+
     inflect_engine = inflect.engine()
 except ImportError:
     inflect = None
@@ -92,6 +93,7 @@ if PY3:
 else:
     unicode_type = unicode
     bytes_type = str
+
 
 # ------------------------------------------------------------------------------
 
@@ -203,20 +205,20 @@ def encoded(text, encoding=DEFAULT_ENCODING):
         else:
             try:
                 return bytes_type(text)
-            except StandardError:
+            except Exception:
                 return '????'
 
     if encoding:
         try:
             return text.encode(encoding)
-        except StandardError:
+        except Exception:
             return text.encode(encoding, errors='ignore')
 
     else:
         for enc in SUPPORTED_ENCODINGS:
             try:
                 return text.encode(enc)
-            except StandardError:
+            except Exception:
                 pass
 
     return '????'
@@ -240,23 +242,23 @@ def decoded(text, encoding=DEFAULT_ENCODING):
     elif type(text) != bytes_type:
         try:
             return unicode_type(text)
-        except StandardError:
+        except Exception:
             try:
                 text = bytes_type(text)
-            except StandardError:
+            except Exception:
                 msg = u'<< projex.text.decoded: unable to decode ({0})>>'
                 return msg.format(repr(text))
 
     if encoding:
         try:
             return text.decode(encoding)
-        except StandardError:
+        except Exception:
             pass
 
     for enc in SUPPORTED_ENCODINGS:
         try:
             return text.decode(enc)
-        except StandardError:
+        except Exception:
             pass
 
     return u'????'
@@ -284,7 +286,7 @@ def isstring(item):
     return type(item).__name__ in STRING_TYPES
 
 
-def nativestring(val, encodings=None):
+def nativestring(val):
     """
     Converts the inputted value to a native python string-type format.
     
@@ -302,12 +304,12 @@ def nativestring(val, encodings=None):
     # otherwise, attempt to return a decoded value
     try:
         return unicode_type(val)
-    except StandardError:
+    except Exception:
         pass
 
     try:
         return bytes_type(val)
-    except StandardError:
+    except Exception:
         return decoded(val)
 
 
@@ -477,7 +479,6 @@ def render(text, options, processed=None):
         splt = key.split('::')
         key = splt[0]
         prefs = splt[1:]
-        value = None
 
         # use the inputted options
         if key in options:
@@ -606,7 +607,7 @@ def safe_eval(value):
     except KeyError:
         try:
             return ast.literal_eval(value)
-        except StandardError:
+        except Exception:
             return value
 
 

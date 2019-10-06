@@ -110,8 +110,6 @@ class EnvManager(object):
         keys = re.findall('\$(\w+)|\${(\w+)\}|\%(\w+)\%', text)
 
         for first, second, third in keys:
-            repl = ''
-            key = ''
             if first:
                 repl = '$%s' % first
                 key = first
@@ -183,9 +181,8 @@ class EnvManager(object):
             if '-' in module:
                 parts = module.split('-')
                 module = parts[0]
-                version = '-'.join(parts)
             else:
-                version = ''
+                pass
 
             if module in self._loadedRequires:
                 continue
@@ -331,7 +328,7 @@ class EnvManager(object):
         except KeyError:
             logger.exception('Could not find sys.modules package: %s' % package)
             return None
-        except StandardError:
+        except Exception:
             logger.exception('Unknown error occurred not import %s' % package)
             return None
 

@@ -10,8 +10,8 @@ __IMPORTED = set()
 import importlib
 import logging
 import os
-import traceback
 import sys
+import traceback
 
 from .text import nativestring as nstr
 
@@ -173,7 +173,7 @@ def importmodules(package_or_toc, ignore=None, recurse=False, silent=None):
             try:
                 __import__(package_or_toc)
                 module = sys.modules[package_or_toc]
-            except ImportError as err:
+            except ImportError:
                 if not silent:
                     logger.error('Unable to import module: %s', package_or_toc)
                     logger.debug(traceback.print_exc())
@@ -246,7 +246,7 @@ def importmodules(package_or_toc, ignore=None, recurse=False, silent=None):
             mod = importlib.import_module(modname)
             sys.modules[modname] = mod
             output.append(mod)
-        except ImportError, err:
+        except ImportError:
             if not silent:
                 logger.error('Error importing module: %s', modname)
                 logger.debug(traceback.print_exc())

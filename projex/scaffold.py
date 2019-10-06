@@ -5,7 +5,6 @@ import os
 import re
 import tempfile
 import zipfile
-
 from collections import OrderedDict
 from xml.etree import ElementTree
 
@@ -14,6 +13,7 @@ from projex import makotext
 from .text import nativestring as nstr
 
 logger = logging.getLogger(__name__)
+
 
 # ----------------------------------------------------------------------
 
@@ -50,13 +50,13 @@ class Property(object):
             cmd.append('(y/n)')
 
         if self.choices:
-            print 'Choices:'
+            print('Choices:')
             for choice in self.choices:
-                print choice
+                print(choice)
         if error:
-            print error
+            print(error)
 
-        value = raw_input(' '.join(cmd) + ':')
+        value = input(' '.join(cmd) + ':')
         if value == '':
             value = self.default
 
@@ -86,7 +86,7 @@ class Property(object):
         for key, value in opts.items():
             try:
                 value = eval(value)
-            except StandardError:
+            except Exception:
                 pass
 
             opts[key] = value
@@ -100,7 +100,7 @@ class Property(object):
         return Property(**opts)
 
 
-#----------------------------------------------------------------------
+# ----------------------------------------------------------------------
 
 class Template(object):
     GlobalOptions = {}
@@ -120,7 +120,7 @@ class Template(object):
         return makotext.render(self.text, options)
 
 
-#----------------------------------------------------------------------
+# ----------------------------------------------------------------------
 
 class Scaffold(object):
     def __init__(self):
@@ -297,6 +297,7 @@ class Scaffold(object):
         Returns the rendered value for the inputted template name.
         
         :param      template | <str>
+        :param      fail     | <str>
         """
         try:
             return self._templates[template].render(scaffold=self)
@@ -400,7 +401,7 @@ class Scaffold(object):
                 contents = makotext.render(contents, opts)
                 zfile.close()
                 return ElementTree.fromstring(contents)
-            except StandardError:
+            except Exception:
                 logger.exception('Failed to load structure.')
                 zfile.close()
                 return None
@@ -412,7 +413,7 @@ class Scaffold(object):
                 xdata = open(filename, 'r').read()
                 xdata = makotext.render(xdata, opts)
                 return ElementTree.fromstring(xdata)
-            except StandardError:
+            except Exception:
                 logger.exception('Failed to load structure.')
                 return None
 
@@ -472,7 +473,7 @@ class Scaffold(object):
             zfile = zipfile.ZipFile(filename, 'r')
             try:
                 xml = ElementTree.fromstring(zfile.read('scaffold.xml'))
-            except StandardError:
+            except Exception:
                 logger.exception('Failed to load scaffold: {0}'.format(filename))
                 zfile.close()
                 return None
@@ -482,7 +483,7 @@ class Scaffold(object):
         else:
             try:
                 xml = ElementTree.parse(filename).getroot()
-            except StandardError:
+            except Exception:
                 logger.exception('Failed to load scaffold: {0}'.format(filename))
                 return None
 
